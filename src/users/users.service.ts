@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { EmailValidationDto } from './dto/email-validation.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,5 +16,9 @@ export class UsersService {
 
   register(registerUserDto: RegisterUserDto) {
     return registerUserDto;
+  }
+
+  update(updateUserDto: UpdateUserDto) {
+    return updateUserDto;
   }
 }
