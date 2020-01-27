@@ -1926,6 +1926,11 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
+cryptr@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/cryptr/-/cryptr-6.0.1.tgz#c839749ecdc8366acfd0f8ac521252c61fd6c0f1"
+  integrity sha512-PD9twTbG18KfCeEkgEM6BrorTLMt+koQQ6/czeELvSFYeaE9nU9+u6cElZgul+Zbt3o5LGi6UWSTkmgiqK1lIA==
+
 cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   version "0.3.8"
   resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.3.8.tgz#9f1276f5b2b463f2114d3f2c75250af8c1a36f4a"

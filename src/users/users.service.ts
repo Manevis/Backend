@@ -16,7 +16,6 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    this.sendEmail.sendVerificationEmail(createUserDto); // send verification email to that user (Email address)
     const user: User = new User();
     user.email = createUserDto.email;
 
@@ -25,6 +24,7 @@ export class UsersService {
     } catch (e) {
       return e.code;
     }
+    this.sendEmail.sendVerificationEmail(user); // send verification email to that user (Email address)
     return user;
   }
 
