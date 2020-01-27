@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { EmailValidationDto } from './dto/email-validation.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -15,7 +16,7 @@ export class UsersController {
   *   2- Send an email to their email address
   * */
   @Post()
-  create(@Body() createUserDto: CreateUserDto): CreateUserDto {
+  create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
 
