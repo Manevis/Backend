@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -7,11 +7,14 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SendEmail } from '../Providers/Email/SendEmail.provider';
 import { User } from './user.entity';
+import Cryption from '../Providers/Cryption/Cryption.provider';
+import { UserStatusEnum } from './enums/user-status.enum';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly sendEmail: SendEmail,
+    private readonly cryption: Cryption,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
@@ -21,15 +24,31 @@ export class UsersService {
 
     try {
       await this.userRepository.save(user);
+      this.sendEmail.sendVerificationEmail(
+        user,
+        this.cryption.encrypt(user.uuid),
+      );
+      return user;
     } catch (e) {
       return e.code;
     }
-    this.sendEmail.sendVerificationEmail(user); // send verification email to that user (Email address)
-    return user;
   }
 
-  validateEmail(emailValidationDto: EmailValidationDto) {
-    return emailValidationDto;
+  async validateEmail(emailValidationDto: EmailValidationDto) {
+    const uuid = this.cryption.decrypt(emailValidationDto.emailValidationToken);
+    const user = await this.userRepository.findOne({ uuid });
+
+    if (user) {
+      if (user.status === UserStatusEnum.RECEIVED_ACTIVATION_EMAIL) {
+        await this.userRepository.update(user, {
+          status: UserStatusEnum.CONFIRMED_EMAIL,
+        });
+      } else {
+        throw new HttpException('ایمیل شما پیش از این تایید شده است!', HttpStatus.NOT_ACCEPTABLE);
+      }
+    } else {
+      throw new HttpException('Not Valid', HttpStatus.FORBIDDEN);
+    }
   }
 
   register(registerUserDto: RegisterUserDto) {

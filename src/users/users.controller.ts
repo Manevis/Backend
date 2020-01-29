@@ -10,22 +10,11 @@ import { User } from './user.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  /*
-  * TODO:
-  *   1- Insert user in database,
-  *   2- Send an email to their email address
-  * */
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
 
-  /*
-  * TODO:
-  *   1- validate user with validation token
-  *   2- change their status to registered
-  *   3- move to a page to enter first-name, last-name, username
-  * */
   @Get('email-validation/:emailValidationToken')
   validateEmail(@Param() emailValidationDto: EmailValidationDto) {
     return this.usersService.validateEmail(emailValidationDto);
