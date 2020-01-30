@@ -1,4 +1,9 @@
-import { IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsAlphanumeric,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterUserDto {
   @IsString()
@@ -8,7 +13,17 @@ export class RegisterUserDto {
   lastName: string;
 
   @IsString()
-  @MinLength(5)
-  @MaxLength(25)
+  @MinLength(5, { message: 'برای نام کاربری حداقل 5 کاراکتر نیاز است' })
+  @MaxLength(25, { message: 'نام کاربری نمی‌تواند بیشتر از 25 کاراکتر باشد!' })
+  @IsAlphanumeric('en-US', {
+    message: 'فقط حروف و اعداد (انگلیسی) وارد نمایید!',
+  })
   username: string;
+
+  @IsString()
+  @MinLength(6, { message: 'رمز عبور باید حداقل شامل 6 کاراکتر باشد.' })
+  password: string;
+
+  @IsString()
+  validationToken: string;
 }

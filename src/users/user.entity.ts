@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, Generated } from 'typeorm';
 import { UserStatusEnum } from './enums/user-status.enum';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -24,6 +25,10 @@ export class User {
 
   @Column({ unique: true, nullable: true })
   username: string;
+
+  @Exclude()
+  @Column({ nullable: true })
+  password: string;
 
   @Column({ nullable: true })
   links: string;
