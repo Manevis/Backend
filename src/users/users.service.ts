@@ -18,6 +18,10 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  async findOne(email: string) {
+    return await this.userRepository.findOne({ email });
+  }
+
   async create(createUserDto: CreateUserDto) {
     const createdUser: User = await this.userRepository.findOne({
       email: createUserDto.email,

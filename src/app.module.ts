@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
+import { AuthModule } from './auth/auth.module';
 import * as env from 'dotenv';
 env.config();
 
@@ -30,6 +31,7 @@ env.config();
       },
     }),
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
