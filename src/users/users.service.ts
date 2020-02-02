@@ -138,7 +138,7 @@ export class UsersService {
     }
   }
 
-  update(updateUserDto: UpdateUserDto) {
-    return updateUserDto;
+  update(user, updateUserDto: UpdateUserDto) {
+    return { ...user, ...updateUserDto };
   }
 }

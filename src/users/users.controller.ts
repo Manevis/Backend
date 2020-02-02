@@ -14,10 +14,14 @@ import { EmailValidationDto } from './dto/email-validation.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from '../auth/auth.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -27,7 +31,7 @@ export class UsersController {
   @Post('/login')
   @UseGuards(AuthGuard('local'))
   login(@Req() req) {
-    return req.user;
+    return this.authService.login(req.user);
   }
 
   @Get('email-validation/:emailValidationToken')
@@ -40,8 +44,15 @@ export class UsersController {
     return this.usersService.register(registerUserDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('profile')
+  getProfile(@Req() req) {
+    return req.user;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Patch()
-  update(@Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(updateUserDto);
+  update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(req.user, updateUserDto);
   }
 }
