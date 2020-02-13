@@ -11,5 +11,17 @@ export class UpdateUserDto {
 
   @IsString()
   @IsOptional()
+  phoneNumber: string;
+
+  @IsString()
+  @IsOptional()
+  links: string;
+
+  @IsString()
+  @IsOptional()
   biography: string;
+
+  @IsString()
+  @IsOptional()
+  avatar: string;
 }

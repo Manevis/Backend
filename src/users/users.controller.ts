@@ -40,14 +40,14 @@ export class UsersController {
   }
 
   @Post('register')
-  register(@Body() registerUserDto: RegisterUserDto) {
-    return this.usersService.register(registerUserDto);
+  async register(@Body() registerUserDto: RegisterUserDto) {
+    return await this.usersService.register(registerUserDto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   getProfile(@Req() req) {
-    return req.user;
+    return this.usersService.findOne(req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))

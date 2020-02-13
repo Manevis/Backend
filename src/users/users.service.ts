@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,17 +15,25 @@ import { SendEmail } from '../Providers/Email/SendEmail.provider';
 import { User } from './user.entity';
 import Cryption from '../Providers/Cryption/Cryption.provider';
 import { UserStatusEnum } from './enums/user-status.enum';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly sendEmail: SendEmail,
     private readonly cryption: Cryption,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
   ) {}
 
-  async findOne(email: string) {
-    return await this.userRepository.findOne({ email });
+  async findOneByEmail(email: string) {
+    return await this.userRepository.findOne({email});
+  }
+
+  async findOne(id: number) {
+    return await this.userRepository.findOne(id);
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -117,11 +131,8 @@ export class UsersService {
             password,
             status: UserStatusEnum.ACTIVE,
           });
-          return {
-            ok: true,
-            message: 'ثبت نام شما تکمیل گردید. به Autor.ir خوش آمدید.',
-            jwtToken: '293784HJfioudsf897sdfsd;fhsdfh&FD(*S&f2347987',
-          };
+          const {password: pw, ...registeredUser} = await this.userRepository.findOne({ uuid });
+          return this.authService.login({ ...registeredUser });
         }
         throw new HttpException(
           'امکان تکمیل ثبت نام برای شما وجود ندارد. لطفا با پشتیبانی تماس حاصل فرمایید',
@@ -138,7 +149,18 @@ export class UsersService {
     }
   }
 
-  update(user, updateUserDto: UpdateUserDto) {
-    return { ...user, ...updateUserDto };
+  async update(user, updateUserDto: UpdateUserDto) {
+    const u = await this.findOne(user.id);
+    await this.userRepository.update(u, {
+      ...updateUserDto,
+    });
+
+    const updatedUser = await this.findOne(user.id);
+
+    return {
+      ok: true,
+      message: 'بروزرسانی اطلاعات کاربری شما با موفقیت انجام شد.',
+      updatedUser,
+    };
   }
 }
