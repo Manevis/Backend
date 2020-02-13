@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, Generated } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Generated, OneToMany } from 'typeorm';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { Exclude } from 'class-transformer';
+import { Post } from '../post/post.entity';
 
 @Entity()
 export class User {
@@ -45,4 +46,7 @@ export class User {
     default: UserStatusEnum.RECEIVED_ACTIVATION_EMAIL,
   })
   status: string;
+
+  @OneToMany(type => Post, post => post.user)
+  posts: Post[];
 }

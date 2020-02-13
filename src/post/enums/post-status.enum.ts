@@ -1,0 +1,7 @@
+export enum PostStatusEnum {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  SCHEDULED = 'SCHEDULED',
+  FILTERED = 'FILTERED',
+  DELETED = 'DELETED',
+}

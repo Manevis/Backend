@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
 import { AuthModule } from './auth/auth.module';
+import { PostModule } from './post/post.module';
 import * as env from 'dotenv';
 env.config();
 
@@ -32,6 +33,7 @@ env.config();
     }),
     AuthModule,
     UsersModule,
+    PostModule,
   ],
 })
 export class AppModule {}
