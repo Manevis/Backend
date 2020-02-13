@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, Generated, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  Generated,
+  OneToMany,
+} from 'typeorm';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { Exclude } from 'class-transformer';
 import { Post } from '../post/post.entity';
@@ -47,6 +53,9 @@ export class User {
   })
   status: string;
 
-  @OneToMany(type => Post, post => post.user)
+  @OneToMany(
+    type => Post,
+    post => post.user,
+  )
   posts: Post[];
 }

@@ -1,6 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from 'typeorm';
 import { PostStatusEnum } from './enums/post-status.enum';
 import { User } from '../users/user.entity';
+import { Subject } from '../subject/subject.entity';
 
 @Entity()
 export class Post {
@@ -20,6 +26,12 @@ export class Post {
   })
   status: string;
 
-  @ManyToOne(type => User, user => user.posts)
+  @ManyToOne(
+    type => User,
+    user => user.posts,
+  )
   user: User;
+
+  @ManyToOne(type => Subject, subject => subject.posts)
+  subject: Subject;
 }

@@ -15,7 +15,9 @@ export class PostService {
   ) {}
 
   async findAll() {
-    return await this.postRepository.find();
+    return await this.postRepository.find({
+      relations: ['subject'],
+    });
   }
 
   async findOne(url: string) {
@@ -24,7 +26,9 @@ export class PostService {
       id = url.split('-').reverse()[0];
     }
     try {
-      const post = await this.postRepository.findOne(Number(this.hashID.decode(id)));
+      const post = await this.postRepository.findOne(
+        Number(this.hashID.decode(id)),
+      );
 
       if (post) {
         const slugArr = post.title.split(' ');
