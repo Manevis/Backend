@@ -30,8 +30,8 @@ env.config();
         },
       },
     }),
-    UsersModule,
     AuthModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
