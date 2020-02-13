@@ -16,9 +16,12 @@ import { User } from './user.entity';
 import Cryption from '../Providers/Cryption/Cryption.provider';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { AuthService } from '../auth/auth.service';
+import {hash} from 'bcrypt';
 
 @Injectable()
 export class UsersService {
+  private readonly SALT_ROUND = 10;
+
   constructor(
     private readonly sendEmail: SendEmail,
     private readonly cryption: Cryption,
@@ -29,7 +32,7 @@ export class UsersService {
   ) {}
 
   async findOneByEmail(email: string) {
-    return await this.userRepository.findOne({email});
+    return await this.userRepository.findOne({ email });
   }
 
   async findOne(id: number) {
@@ -124,14 +127,18 @@ export class UsersService {
     if (user) {
       try {
         if (user.status === UserStatusEnum.CONFIRMED_EMAIL) {
+          const hashedPassword = await hash(password, this.SALT_ROUND);
           await this.userRepository.update(user, {
             firstName,
             lastName,
             username,
-            password,
+            password: hashedPassword,
             status: UserStatusEnum.ACTIVE,
           });
-          const {password: pw, ...registeredUser} = await this.userRepository.findOne({ uuid });
+          const {
+            password: pw,
+            ...registeredUser
+          } = await this.userRepository.findOne({ uuid });
           return this.authService.login({ ...registeredUser });
         }
         throw new HttpException(
@@ -139,6 +146,7 @@ export class UsersService {
           HttpStatus.FORBIDDEN,
         );
       } catch (e) {
+        console.log(e);
         return e;
       }
     } else {
