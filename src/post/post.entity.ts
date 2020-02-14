@@ -3,10 +3,13 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { PostStatusEnum } from './enums/post-status.enum';
 import { User } from '../users/user.entity';
 import { Subject } from '../subject/subject.entity';
+import { Label } from '../label/label.entity';
 
 @Entity()
 export class Post {
@@ -32,6 +35,16 @@ export class Post {
   )
   user: User;
 
-  @ManyToOne(type => Subject, subject => subject.posts)
+  @ManyToOne(
+    type => Subject,
+    subject => subject.posts,
+  )
   subject: Subject;
+
+  @ManyToMany(
+    type => Label,
+    label => label.posts,
+  )
+  @JoinTable()
+  labels: Label[];
 }
