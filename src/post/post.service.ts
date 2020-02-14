@@ -5,19 +5,43 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './post.entity';
 import { UsersService } from '../users/users.service';
 import { HashID } from '../Providers/HashID/HashID';
+import { GetPostsDto } from './dto/get-posts.dto';
+import { SubjectService } from '../subject/subject.service';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     private readonly usersService: UsersService,
+    private readonly subjectService: SubjectService,
     private readonly hashID: HashID,
   ) {}
 
-  async findAll() {
-    return await this.postRepository.find({
+  async findAll(getPostsDto: GetPostsDto) {
+    const where: { subject?: number; labels?: number } = {};
+    if (getPostsDto.subject) {
+      where.subject = getPostsDto.subject;
+    }
+    if (getPostsDto.label) {
+      where['post.labels'] = getPostsDto.label;
+    }
+
+    const [posts, totalCount] = await this.postRepository.findAndCount({
       relations: ['subject', 'labels'],
+      take: getPostsDto.limit || 10,
+      skip: getPostsDto.page * (getPostsDto.limit || 10),
+      where,
     });
+
+    return {
+      posts,
+      pagination: {
+        totalCount,
+        size: Number(getPostsDto.limit) || 10,
+        page: Number(getPostsDto.page) || 0,
+        totalPage: Math.ceil(totalCount / (Number(getPostsDto.limit) || 10)),
+      },
+    };
   }
 
   async findOne(url: string) {
@@ -51,10 +75,12 @@ export class PostService {
 
   async create(user, createPostDto: CreatePostDto) {
     const u = await this.usersService.findOne(user.id);
+    const subject = await this.subjectService.findOne(createPostDto.subjectId);
     const NewPost = new Post();
     NewPost.title = createPostDto.title;
     NewPost.content = createPostDto.content;
     NewPost.user = u;
+    NewPost.subject = subject;
     try {
       return await this.postRepository.save(NewPost);
     } catch (e) {

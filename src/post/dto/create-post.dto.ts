@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumberString, IsString } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -6,4 +6,7 @@ export class CreatePostDto {
 
   @IsString()
   content: string;
+
+  @IsNumberString()
+  subjectId: number;
 }
