@@ -1,4 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Label } from './label.entity';
+import { Repository } from 'typeorm';
+import { CreateLabelDto } from './dto/create-label.dto';
 
 @Injectable()
-export class LabelService {}
+export class LabelService {
+  constructor(
+    @InjectRepository(Label)
+    private readonly labelRepository: Repository<Label>,
+  ) {}
+
+  async findAll() {
+    return await this.labelRepository.find();
+  }
+
+  async create(createLabelDto: CreateLabelDto) {
+    const label: Label = new Label();
+    label.name = createLabelDto.name;
+
+    try {
+      return await this.labelRepository.save(label);
+    } catch (e) {
+      throw new HttpException('لیبل تکراری است!', HttpStatus.CONFLICT);
+    }
+  }
+}

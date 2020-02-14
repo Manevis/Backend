@@ -1,4 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { SubjectService } from './subject.service';
 
-@Controller('subject')
-export class SubjectController {}
+@Controller('subjects')
+export class SubjectController {
+  constructor(private readonly subjectService: SubjectService) {}
+
+  @Get()
+  findAll() {
+    return this.subjectService.findAll();
+  }
+}
