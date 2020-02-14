@@ -52,7 +52,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch()
-  update(@Req() req, @Body() updateUserDto: UpdateUserDto) {
+  update(@Body() updateUserDto: UpdateUserDto, @Req() req) {
     return this.usersService.update(req.user, updateUserDto);
   }
 }
