@@ -7,6 +7,7 @@ import { UsersService } from '../users/users.service';
 import { HashID } from '../Providers/HashID/HashID';
 import { GetPostsDto } from './dto/get-posts.dto';
 import { SubjectService } from '../subject/subject.service';
+import { PostStatusEnum } from './enums/post-status.enum';
 
 @Injectable()
 export class PostService {
@@ -18,7 +19,9 @@ export class PostService {
   ) {}
 
   async findAll(getPostsDto: GetPostsDto) {
-    const where: { subject?: number; labels?: number } = {};
+    const where: { subject?: number; labels?: number; status: string } = {
+      status: PostStatusEnum.PUBLISHED,
+    };
     if (getPostsDto.subject) {
       where.subject = getPostsDto.subject;
     }
@@ -27,7 +30,7 @@ export class PostService {
     }
 
     const [posts, totalCount] = await this.postRepository.findAndCount({
-      relations: ['subject', 'labels'],
+      relations: ['subject', 'labels', 'user'],
       take: getPostsDto.limit || 10,
       skip: getPostsDto.page * (getPostsDto.limit || 10),
       where,
@@ -50,9 +53,12 @@ export class PostService {
       id = url.split('-').reverse()[0];
     }
     try {
-      const post = await this.postRepository.findOne(
-        Number(this.hashID.decode(id)),
-      );
+      const post = await this.postRepository.findOne({
+        where: {
+          id: Number(this.hashID.decode(id)),
+        },
+        relations: ['subject', 'labels', 'user'],
+      });
 
       if (post) {
         const slugArr = post.title.split(' ');

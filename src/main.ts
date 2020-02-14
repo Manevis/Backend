@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 NestFactory.create(AppModule).then(app => {
   app.setGlobalPrefix('api');
+  app.enableCors();
   app.use(helmet());
   app.use(compression());
   app.useGlobalPipes(
@@ -16,5 +17,5 @@ NestFactory.create(AppModule).then(app => {
       forbidUnknownValues: true,
     }),
   );
-  app.listen(3000);
+  app.listen(8888);
 });
