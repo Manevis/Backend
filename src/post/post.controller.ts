@@ -13,7 +13,7 @@ import { PostService } from './post.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GetPostsDto } from './dto/get-posts.dto';
 
-@Controller('post')
+@Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
