@@ -16,7 +16,7 @@ import { User } from './user.entity';
 import Cryption from '../Providers/Cryption/Cryption.provider';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { AuthService } from '../auth/auth.service';
-import {hash} from 'bcrypt';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -36,7 +36,13 @@ export class UsersService {
   }
 
   async findOne(id: number) {
-    return await this.userRepository.findOne(id);
+    const user = await this.userRepository.findOne(id);
+
+    if (user) {
+      return user;
+    }
+
+    throw new HttpException(`کاربری یافت نشد!`, HttpStatus.NOT_FOUND);
   }
 
   async create(createUserDto: CreateUserDto) {
