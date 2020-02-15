@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './post.entity';
 import { UsersService } from '../users/users.service';
-import { HashID } from '../Providers/HashID/HashID';
 import { GetPostsDto } from './dto/get-posts.dto';
 import { SubjectService } from '../subject/subject.service';
 import { PostStatusEnum } from './enums/post-status.enum';
@@ -15,7 +14,6 @@ export class PostService {
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     private readonly usersService: UsersService,
     private readonly subjectService: SubjectService,
-    private readonly hashID: HashID,
   ) {}
 
   async findAll(getPostsDto: GetPostsDto) {
@@ -47,26 +45,14 @@ export class PostService {
     };
   }
 
-  async findOne(url: string) {
-    let id = url;
-    if (url.includes('-')) {
-      id = url.split('-').reverse()[0];
-    }
+  async findOne(id: number) {
     try {
-      const post = await this.postRepository.findOne({
-        where: {
-          id: Number(this.hashID.decode(id)),
-        },
+      const post = await this.postRepository.findOne(id, {
         relations: ['user'],
       });
 
       if (post) {
-        const slugArr = post.title.split(' ');
-        slugArr.push(this.hashID.encode(String(post.id)));
-        return {
-          ...post,
-          slug: slugArr.join('-'),
-        };
+        return post;
       } else {
         throw new HttpException(
           'مقاله مورد نظر یافت نشد',

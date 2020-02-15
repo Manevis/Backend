@@ -17,7 +17,7 @@ export class SendEmail {
       template: 'email-verification',
       context: {
         title: `فعالسازی ایمیل ${user.email}`,
-        activationURL: `https://Autor.ir/users/email-validation/${activationCode}`,
+        activationURL: `https://localhost:3000/registration/email-validation/${activationCode}`,
         email: user.email,
       },
     });

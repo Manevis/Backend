@@ -22,9 +22,9 @@ export class PostController {
     return this.postService.findAll(getPostsDto);
   }
 
-  @Get(':url')
-  findOne(@Param('url') url) {
-    return this.postService.findOne(url);
+  @Get(':id')
+  findOne(@Param('id') postId) {
+    return this.postService.findOne(postId);
   }
 
   @UseGuards(AuthGuard('jwt'))

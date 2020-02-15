@@ -18,32 +18,32 @@ export class User extends BaseEntity {
   @Generated('uuid')
   uuid: string;
 
-  @Column({ nullable: true })
+  @Column()
   firstName: string;
 
-  @Column({ nullable: true })
+  @Column()
   lastName: string;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
 
-  @Column({ nullable: true })
+  @Column()
   phoneNumber: string;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true })
   username: string;
 
   @Exclude()
-  @Column({ nullable: true })
+  @Column()
   password: string;
 
-  @Column({ nullable: true })
+  @Column()
   links: string;
 
-  @Column({ nullable: true, type: 'text' })
+  @Column({ type: 'text' })
   biography: string;
 
-  @Column({ nullable: true })
+  @Column()
   avatar: string;
 
   @Column({
