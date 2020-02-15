@@ -3,7 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   Generated,
-  OneToMany, BaseEntity, CreateDateColumn,
+  OneToMany,
+  BaseEntity,
+  CreateDateColumn,
 } from 'typeorm';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { Exclude } from 'class-transformer';
@@ -34,7 +36,7 @@ export class User extends BaseEntity {
   username: string;
 
   @Exclude()
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column()
@@ -53,12 +55,9 @@ export class User extends BaseEntity {
   })
   status: string;
 
-  @OneToMany(
-    type => Post,
-    post => post.user, {
-      cascade: true,
-    },
-  )
+  @OneToMany(type => Post, post => post.user, {
+    cascade: true,
+  })
   posts: Post[];
 
   @CreateDateColumn()

@@ -19,14 +19,22 @@ export class PostService {
   async findAll(getPostsDto: GetPostsDto) {
     const take = Number(getPostsDto.limit) || 10;
     const skip = Number(getPostsDto.page) * Number(take) || 0;
-    console.log(take, skip, getPostsDto.page, Number(getPostsDto.page));
     const subject = getPostsDto.subject;
     const label = getPostsDto.label;
+    const user = getPostsDto.user;
     const where = {
       status: PostStatusEnum.PUBLISHED,
     };
 
     const query = this.postRepository.createQueryBuilder('post');
+
+    if (subject) {
+      query.innerJoinAndSelect('post.user', 'user', 'user.id = :id', {
+        id: user,
+      });
+    } else {
+      query.leftJoinAndSelect('post.user', 'user');
+    }
 
     if (subject) {
       query.innerJoinAndSelect('post.subject', 'subject', 'subject.id = :id', {
@@ -35,6 +43,7 @@ export class PostService {
     } else {
       query.leftJoinAndSelect('post.subject', 'subject');
     }
+
     if (label) {
       query.innerJoinAndSelect('post.labels', 'label', 'label.id = :id', {
         id: label,

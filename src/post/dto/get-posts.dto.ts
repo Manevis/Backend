@@ -16,4 +16,8 @@ export class GetPostsDto {
   @IsOptional()
   @IsNumberString()
   subject: number;
+
+  @IsOptional()
+  @IsNumberString()
+  user: number;
 }

@@ -32,7 +32,10 @@ export class UsersService {
   ) {}
 
   async findOneByEmail(email: string) {
-    return await this.userRepository.findOne({ email });
+    return await this.userRepository.findOne(
+      { email },
+      { select: ['password'] },
+    );
   }
 
   async findOne(id: number) {
@@ -139,11 +142,7 @@ export class UsersService {
           user.password = hashedPassword;
           user.status = UserStatusEnum.ACTIVE;
           await user.save();
-          const {
-            password: pw,
-            ...registeredUser
-          } = user;
-          return this.authService.login({ ...registeredUser });
+          return this.authService.login(user);
         }
         throw new HttpException(
           'امکان تکمیل ثبت نام برای شما وجود ندارد. لطفا با پشتیبانی تماس حاصل فرمایید',
@@ -171,12 +170,10 @@ export class UsersService {
     u.links = updateUserDto.links;
     await u.save();
 
-    const {password, ...updatedUser} = u;
-
     return {
       ok: true,
       message: 'بروزرسانی اطلاعات کاربری شما با موفقیت انجام شد.',
-      updatedUser,
+      updatedUser: u,
     };
   }
 }
