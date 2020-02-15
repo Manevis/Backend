@@ -3,12 +3,12 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToMany,
-  Unique,
+  BaseEntity, CreateDateColumn,
 } from 'typeorm';
 import { Post } from '../post/post.entity';
 
 @Entity()
-export class Label {
+export class Label extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,4 +20,10 @@ export class Label {
     post => post.labels,
   )
   posts: Post[];
+
+  @CreateDateColumn()
+  createdAt: string;
+
+  @CreateDateColumn()
+  updatedAt: string;
 }

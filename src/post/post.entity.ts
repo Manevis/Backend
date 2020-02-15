@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   ManyToMany,
-  JoinTable,
+  JoinTable, BaseEntity, CreateDateColumn,
 } from 'typeorm';
 import { PostStatusEnum } from './enums/post-status.enum';
 import { User } from '../users/user.entity';
@@ -12,7 +12,7 @@ import { Subject } from '../subject/subject.entity';
 import { Label } from '../label/label.entity';
 
 @Entity()
-export class Post {
+export class Post extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -37,14 +37,26 @@ export class Post {
 
   @ManyToOne(
     type => Subject,
-    subject => subject.posts,
+    subject => subject.posts, {
+      cascade: true,
+      eager: true,
+    },
   )
   subject: Subject;
 
   @ManyToMany(
     type => Label,
-    label => label.posts,
+    label => label.posts, {
+      cascade: true,
+      eager: true,
+    },
   )
   @JoinTable()
   labels: Label[];
+
+  @CreateDateColumn()
+  createdAt: string;
+
+  @CreateDateColumn()
+  updatedAt: string;
 }

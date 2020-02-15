@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity, CreateDateColumn } from 'typeorm';
 import { Post } from '../post/post.entity';
 
 @Entity()
-export class Subject {
+export class Subject extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -14,4 +14,10 @@ export class Subject {
     post => post.subject,
   )
   posts: Post[];
+
+  @CreateDateColumn()
+  createdAt: string;
+
+  @CreateDateColumn()
+  updatedAt: string;
 }

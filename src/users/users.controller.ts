@@ -34,8 +34,8 @@ export class UsersController {
     return this.authService.login(req.user);
   }
 
-  @Get('email-validation/:emailValidationToken')
-  validateEmail(@Param() emailValidationDto: EmailValidationDto) {
+  @Post('email-validation')
+  validateEmail(@Body() emailValidationDto: EmailValidationDto) {
     return this.usersService.validateEmail(emailValidationDto);
   }
 

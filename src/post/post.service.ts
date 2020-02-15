@@ -19,18 +19,18 @@ export class PostService {
   ) {}
 
   async findAll(getPostsDto: GetPostsDto) {
-    const where: { subject?: number; labels?: number; status: string } = {
+    const where: { subject?: number; labels?: number[]; status: string } = {
       status: PostStatusEnum.PUBLISHED,
     };
     if (getPostsDto.subject) {
       where.subject = getPostsDto.subject;
     }
     if (getPostsDto.label) {
-      where['post.labels'] = getPostsDto.label;
+      where.labels = [getPostsDto.label];
     }
 
     const [posts, totalCount] = await this.postRepository.findAndCount({
-      relations: ['subject', 'labels', 'user'],
+      relations: ['user'],
       take: getPostsDto.limit || 10,
       skip: getPostsDto.page * (getPostsDto.limit || 10),
       where,
@@ -57,7 +57,7 @@ export class PostService {
         where: {
           id: Number(this.hashID.decode(id)),
         },
-        relations: ['subject', 'labels', 'user'],
+        relations: ['user'],
       });
 
       if (post) {
@@ -87,8 +87,9 @@ export class PostService {
     NewPost.content = createPostDto.content;
     NewPost.user = u;
     NewPost.subject = subject;
+    NewPost.status = PostStatusEnum.PUBLISHED;
     try {
-      return await this.postRepository.save(NewPost);
+      return await NewPost.save();
     } catch (e) {
       console.log(e);
       return e;

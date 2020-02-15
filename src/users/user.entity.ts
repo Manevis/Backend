@@ -3,14 +3,14 @@ import {
   Column,
   PrimaryGeneratedColumn,
   Generated,
-  OneToMany,
+  OneToMany, BaseEntity, CreateDateColumn,
 } from 'typeorm';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { Exclude } from 'class-transformer';
 import { Post } from '../post/post.entity';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -55,7 +55,15 @@ export class User {
 
   @OneToMany(
     type => Post,
-    post => post.user,
+    post => post.user, {
+      cascade: true,
+    },
   )
   posts: Post[];
+
+  @CreateDateColumn()
+  createdAt: string;
+
+  @CreateDateColumn()
+  updatedAt: string;
 }

@@ -101,9 +101,8 @@ export class UsersService {
 
     if (user) {
       if (user.status === UserStatusEnum.RECEIVED_ACTIVATION_EMAIL) {
-        await this.userRepository.update(user, {
-          status: UserStatusEnum.CONFIRMED_EMAIL,
-        });
+        user.status = UserStatusEnum.CONFIRMED_EMAIL;
+        await user.save();
         return {
           ok: true,
           message: `ایمیل ${user.email} با موفقیت تایید گردید.`,
@@ -134,17 +133,16 @@ export class UsersService {
       try {
         if (user.status === UserStatusEnum.CONFIRMED_EMAIL) {
           const hashedPassword = await hash(password, this.SALT_ROUND);
-          await this.userRepository.update(user, {
-            firstName,
-            lastName,
-            username,
-            password: hashedPassword,
-            status: UserStatusEnum.ACTIVE,
-          });
+          user.firstName = firstName;
+          user.lastName = lastName;
+          user.username = username;
+          user.password = hashedPassword;
+          user.status = UserStatusEnum.ACTIVE;
+          await user.save();
           const {
             password: pw,
             ...registeredUser
-          } = await this.userRepository.findOne({ uuid });
+          } = user;
           return this.authService.login({ ...registeredUser });
         }
         throw new HttpException(
@@ -164,12 +162,16 @@ export class UsersService {
   }
 
   async update(user, updateUserDto: UpdateUserDto) {
-    const u = await this.findOne(user.id);
-    await this.userRepository.update(u, {
-      ...updateUserDto,
-    });
+    const u: User = await this.findOne(user.id);
+    u.firstName = updateUserDto.firstName;
+    u.lastName = updateUserDto.lastName;
+    u.biography = updateUserDto.biography;
+    u.phoneNumber = updateUserDto.phoneNumber;
+    u.avatar = updateUserDto.avatar;
+    u.links = updateUserDto.links;
+    await u.save();
 
-    const updatedUser = await this.findOne(user.id);
+    const {password, ...updatedUser} = u;
 
     return {
       ok: true,
