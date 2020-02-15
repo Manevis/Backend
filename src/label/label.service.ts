@@ -15,6 +15,16 @@ export class LabelService {
     return await this.labelRepository.find();
   }
 
+  async findOne(id: number) {
+    return await this.labelRepository.findOne(id);
+  }
+
+  async findPosts(id: number) {
+    return await this.labelRepository.findOne(id, {
+      relations: ['posts'],
+    });
+  }
+
   async create(createLabelDto: CreateLabelDto) {
     const label: Label = new Label();
     label.name = createLabelDto.name;

@@ -17,30 +17,43 @@ export class PostService {
   ) {}
 
   async findAll(getPostsDto: GetPostsDto) {
-    const where: { subject?: number; labels?: number[]; status: string } = {
+    const take = Number(getPostsDto.limit) || 10;
+    const skip = Number(getPostsDto.page) * Number(take) || 0;
+    console.log(take, skip, getPostsDto.page, Number(getPostsDto.page));
+    const subject = getPostsDto.subject;
+    const label = getPostsDto.label;
+    const where = {
       status: PostStatusEnum.PUBLISHED,
     };
-    if (getPostsDto.subject) {
-      where.subject = getPostsDto.subject;
-    }
-    if (getPostsDto.label) {
-      where.labels = [getPostsDto.label];
-    }
 
-    const [posts, totalCount] = await this.postRepository.findAndCount({
-      relations: ['user'],
-      take: getPostsDto.limit || 10,
-      skip: getPostsDto.page * (getPostsDto.limit || 10),
-      where,
-    });
+    const query = this.postRepository.createQueryBuilder('post');
+
+    if (subject) {
+      query.innerJoinAndSelect('post.subject', 'subject', 'subject.id = :id', {
+        id: subject,
+      });
+    } else {
+      query.leftJoinAndSelect('post.subject', 'subject');
+    }
+    if (label) {
+      query.innerJoinAndSelect('post.labels', 'label', 'label.id = :id', {
+        id: label,
+      });
+    } else {
+      query.leftJoinAndSelect('post.labels', 'label');
+    }
+    query.take(take);
+    query.skip(skip);
+    query.where(where);
+    const [posts, totalCount] = await query.getManyAndCount();
 
     return {
       posts,
       pagination: {
         totalCount,
-        size: Number(getPostsDto.limit) || 10,
+        size: take,
         page: Number(getPostsDto.page) || 0,
-        totalPage: Math.ceil(totalCount / (Number(getPostsDto.limit) || 10)),
+        totalPage: Math.ceil(totalCount / take),
       },
     };
   }

@@ -26,4 +26,12 @@ export class SubjectService {
       );
     }
   }
+
+  async findPosts(id: number) {
+    return await this.subjectRepository
+      .createQueryBuilder('s')
+      .where('s.id = :id', { id })
+      .leftJoinAndSelect('s.posts', 'subject')
+      .getOne();
+  }
 }
