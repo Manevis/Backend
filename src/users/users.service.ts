@@ -32,7 +32,19 @@ export class UsersService {
   ) {}
 
   async findOneByEmail(email: string) {
-    return await this.userRepository.findOne({ email }, {select: ['password', 'username', 'firstName', 'lastName', 'id', 'email']});
+    return await this.userRepository.findOne(
+      { email },
+      {
+        select: [
+          'password',
+          'username',
+          'firstName',
+          'lastName',
+          'id',
+          'email',
+        ],
+      },
+    );
   }
 
   async findOne(id: number) {
@@ -139,7 +151,7 @@ export class UsersService {
           user.password = hashedPassword;
           user.status = UserStatusEnum.ACTIVE;
           await user.save();
-          return this.authService.login(user);
+          return this.authService.login({ ...user });
         }
         throw new HttpException(
           'امکان تکمیل ثبت نام برای شما وجود ندارد. لطفا با پشتیبانی تماس حاصل فرمایید',

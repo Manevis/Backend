@@ -53,10 +53,14 @@ export class PostService {
     query.take(take);
     query.skip(skip);
     query.where('post.status = :status', {status: PostStatusEnum.PUBLISHED});
+    query.orderBy('post.id', 'DESC');
     const [posts, totalCount] = await query.getManyAndCount();
 
     const result = {
       posts,
+      user: null,
+      subject: null,
+      label: null,
       pagination: {
         totalCount,
         size: take,
@@ -66,13 +70,13 @@ export class PostService {
     };
 
     if(user) {
-      result['user'] = await this.usersService.findOne(user);
+      result.user = await this.usersService.findOne(user);
     }
     if(subject) {
-      result['subject'] = await this.subjectService.findOne(subject);
+      result.subject = await this.subjectService.findOne(subject);
     }
     if(label) {
-      result['label'] = await this.labelService.findOne(label);
+      result.label = await this.labelService.findOne(label);
     }
 
     return result;
