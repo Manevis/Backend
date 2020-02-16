@@ -7,6 +7,7 @@ import { UsersService } from '../users/users.service';
 import { GetPostsDto } from './dto/get-posts.dto';
 import { SubjectService } from '../subject/subject.service';
 import { PostStatusEnum } from './enums/post-status.enum';
+import {LabelService} from "../label/label.service";
 
 @Injectable()
 export class PostService {
@@ -14,6 +15,7 @@ export class PostService {
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     private readonly usersService: UsersService,
     private readonly subjectService: SubjectService,
+    private readonly labelService: LabelService,
   ) {}
 
   async findAll(getPostsDto: GetPostsDto) {
@@ -22,13 +24,10 @@ export class PostService {
     const subject = getPostsDto.subject;
     const label = getPostsDto.label;
     const user = getPostsDto.user;
-    const where = {
-      status: PostStatusEnum.PUBLISHED,
-    };
 
     const query = this.postRepository.createQueryBuilder('post');
 
-    if (subject) {
+    if (user) {
       query.innerJoinAndSelect('post.user', 'user', 'user.id = :id', {
         id: user,
       });
@@ -53,10 +52,10 @@ export class PostService {
     }
     query.take(take);
     query.skip(skip);
-    query.where(where);
+    query.where('post.status = :status', {status: PostStatusEnum.PUBLISHED});
     const [posts, totalCount] = await query.getManyAndCount();
 
-    return {
+    const result = {
       posts,
       pagination: {
         totalCount,
@@ -65,6 +64,18 @@ export class PostService {
         totalPage: Math.ceil(totalCount / take),
       },
     };
+
+    if(user) {
+      result['user'] = await this.usersService.findOne(user);
+    }
+    if(subject) {
+      result['subject'] = await this.subjectService.findOne(subject);
+    }
+    if(label) {
+      result['label'] = await this.labelService.findOne(label);
+    }
+
+    return result;
   }
 
   async findOne(id: number) {

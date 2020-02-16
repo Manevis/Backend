@@ -8,5 +8,6 @@ import { Label } from './label.entity';
   imports: [TypeOrmModule.forFeature([Label])],
   controllers: [LabelController],
   providers: [LabelService],
+  exports: [LabelService]
 })
 export class LabelModule {}
