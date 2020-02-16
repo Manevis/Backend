@@ -16,7 +16,7 @@ export class Photo extends BaseEntity {
     name: string;
 
     @Column({unique: true})
-    uuid: string;
+    fileName: string;
 
     @Column()
     description: string;

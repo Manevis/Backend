@@ -40,7 +40,12 @@ export class PhotoController {
     }
 
     @Get(':fileName')
-    async serveAvatar(@Param('fileName') fileName, @Res() res) {
+    async findOne(@Param('fileName') fileName: string) {
+        return this.photoService.findOne(fileName);
+    }
+
+    @Get(':fileName/file')
+    async findFile(@Param('fileName') fileName, @Res() res) {
         try {
             return res.sendFile(fileName, { root: 'photos'});
         } catch {
