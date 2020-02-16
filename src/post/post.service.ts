@@ -104,6 +104,7 @@ export class PostService {
     const NewPost = new Post();
     NewPost.title = createPostDto.title;
     NewPost.content = createPostDto.content;
+    NewPost.cover = createPostDto.cover;
     NewPost.user = u;
     NewPost.subject = subject;
     NewPost.status = PostStatusEnum.PUBLISHED;

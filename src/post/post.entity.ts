@@ -19,6 +19,9 @@ export class Post extends BaseEntity {
   @Column('varchar')
   title: string;
 
+  @Column()
+  cover: string;
+
   @Column('text')
   content: string;
 

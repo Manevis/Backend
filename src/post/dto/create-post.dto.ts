@@ -1,4 +1,4 @@
-import { IsNumberString, IsString } from 'class-validator';
+import {IsArray, IsNumberString, IsOptional, IsString} from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -7,6 +7,14 @@ export class CreatePostDto {
   @IsString()
   content: string;
 
+  @IsString()
+  cover: string;
+
   @IsNumberString()
+  @IsOptional()
   subjectId: number;
+
+  @IsArray()
+  @IsOptional()
+  labels: number[];
 }
