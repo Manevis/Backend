@@ -34,9 +34,9 @@ export class Photo extends BaseEntity {
     )
     user: User;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     createdAt: string;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     updatedAt: string;
 }

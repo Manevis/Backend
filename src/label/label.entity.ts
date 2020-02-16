@@ -21,9 +21,9 @@ export class Label extends BaseEntity {
   )
   posts: Post[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
   createdAt: string;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
   updatedAt: string;
 }

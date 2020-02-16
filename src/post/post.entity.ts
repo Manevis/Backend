@@ -57,9 +57,9 @@ export class Post extends BaseEntity {
   @JoinTable()
   labels: Label[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
   createdAt: string;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
   updatedAt: string;
 }
