@@ -46,10 +46,10 @@ export class PhotoController {
 
     @Get(':fileName/file')
     async findFile(@Param('fileName') fileName, @Res() res) {
-        try {
-            return res.sendFile(fileName, { root: 'photos'});
-        } catch {
-            throw new HttpException('فایلی یافت نشد!', HttpStatus.NOT_FOUND);
-        }
+        return res.sendFile(fileName, { root: 'photos'}, err => {
+            if(err) {
+                return res.status(HttpStatus.NOT_FOUND).send();
+            }
+        });
     }
 }
