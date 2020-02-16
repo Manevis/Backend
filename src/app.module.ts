@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { SubjectModule } from './subject/subject.module';
 import { LabelModule } from './label/label.module';
+import { PhotoModule } from './photo/photo.module';
 import * as env from 'dotenv';
 env.config();
 
@@ -38,6 +39,7 @@ env.config();
     PostModule,
     SubjectModule,
     LabelModule,
+    PhotoModule,
   ],
 })
 export class AppModule {}

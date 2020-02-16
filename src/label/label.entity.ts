@@ -3,7 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToMany,
-  BaseEntity, CreateDateColumn,
+  BaseEntity, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 import { Post } from '../post/post.entity';
 
@@ -24,6 +24,6 @@ export class Label extends BaseEntity {
   @CreateDateColumn()
   createdAt: string;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updatedAt: string;
 }

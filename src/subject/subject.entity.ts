@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, BaseEntity, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  BaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { Post } from '../post/post.entity';
 
 @Entity()
@@ -18,6 +26,6 @@ export class Subject extends BaseEntity {
   @CreateDateColumn()
   createdAt: string;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updatedAt: string;
 }

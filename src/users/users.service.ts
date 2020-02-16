@@ -32,10 +32,7 @@ export class UsersService {
   ) {}
 
   async findOneByEmail(email: string) {
-    return await this.userRepository.findOne(
-      { email },
-      { select: ['password'] },
-    );
+    return await this.userRepository.findOne({ email }, {select: ['password', 'username', 'firstName', 'lastName', 'id', 'email']});
   }
 
   async findOne(id: number) {

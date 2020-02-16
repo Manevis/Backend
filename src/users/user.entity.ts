@@ -5,11 +5,12 @@ import {
   Generated,
   OneToMany,
   BaseEntity,
-  CreateDateColumn,
+  CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { Exclude } from 'class-transformer';
 import { Post } from '../post/post.entity';
+import {Photo} from "../photo/photo.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -60,9 +61,14 @@ export class User extends BaseEntity {
   })
   posts: Post[];
 
+  @OneToMany(type => Photo, photo => photo.user, {
+    cascade: true,
+  })
+  photos: Photo[];
+
   @CreateDateColumn()
   createdAt: string;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updatedAt: string;
 }

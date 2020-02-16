@@ -2,7 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import * as helmet from 'helmet';
 import * as compression from 'compression';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import {ClassSerializerInterceptor, ValidationPipe} from '@nestjs/common';
+import {User} from "./users/user.entity";
 
 NestFactory.create(AppModule).then(app => {
   app.setGlobalPrefix('api');

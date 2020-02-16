@@ -4,7 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   ManyToMany,
-  JoinTable, BaseEntity, CreateDateColumn,
+  JoinTable, BaseEntity, CreateDateColumn, UpdateDateColumn,
 } from 'typeorm';
 import { PostStatusEnum } from './enums/post-status.enum';
 import { User } from '../users/user.entity';
@@ -57,6 +57,6 @@ export class Post extends BaseEntity {
   @CreateDateColumn()
   createdAt: string;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updatedAt: string;
 }
