@@ -83,7 +83,7 @@ export class UsersService {
           };
         case UserStatusEnum.RECEIVED_ACTIVATION_EMAIL:
           return {
-            ok: false,
+            ok: true,
             userStatus: createdUser.status,
           };
       }
@@ -100,6 +100,7 @@ export class UsersService {
         return {
           ok: true,
           message: `لینک فعال‌سازی به ${user.email} ارسال شد`,
+          userStatus: UserStatusEnum.RECEIVED_ACTIVATION_EMAIL,
         };
       } catch (e) {
         return e.code;
