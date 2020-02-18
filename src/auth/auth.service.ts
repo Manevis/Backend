@@ -22,8 +22,20 @@ export class AuthService {
   }
 
   login({ password, ...user }) {
+    const {
+      uuid,
+      phoneNumber,
+      links,
+      biography,
+      avatar,
+      status,
+      createdAt,
+      updatedAt,
+      ...forSign
+    } = user;
     return {
-      access_token: this.jwtService.sign(user),
+      token: this.jwtService.sign(forSign),
+      user,
     };
   }
 }

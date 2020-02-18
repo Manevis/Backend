@@ -36,12 +36,18 @@ export class UsersService {
       { email },
       {
         select: [
-          'password',
-          'username',
+          'id',
+          'uuid',
           'firstName',
           'lastName',
-          'id',
           'email',
+          'phoneNumber',
+          'username',
+          'password',
+          'links',
+          'biography',
+          'avatar',
+          'status',
         ],
       },
     );
