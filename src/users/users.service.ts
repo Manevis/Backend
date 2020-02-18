@@ -57,6 +57,16 @@ export class UsersService {
     throw new HttpException(`کاربری یافت نشد!`, HttpStatus.NOT_FOUND);
   }
 
+  async findOneByUsername(username: string) {
+    const user = await this.userRepository.findOne({ username });
+
+    if (user) {
+      return user;
+    }
+
+    throw new HttpException(`کاربری یافت نشد!`, HttpStatus.NOT_FOUND);
+  }
+
   async create(createUserDto: CreateUserDto) {
     const createdUser: User = await this.userRepository.findOne({
       email: createUserDto.email,

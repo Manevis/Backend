@@ -1,4 +1,4 @@
-import { IsNumberString, IsOptional } from 'class-validator';
+import {IsAlphanumeric, IsNumberString, IsOptional} from 'class-validator';
 
 export class GetPostsDto {
   @IsOptional()
@@ -18,6 +18,6 @@ export class GetPostsDto {
   subject: number;
 
   @IsOptional()
-  @IsNumberString()
-  user: number;
+  @IsAlphanumeric()
+  user: string;
 }

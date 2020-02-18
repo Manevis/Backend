@@ -23,13 +23,14 @@ export class PostService {
     const skip = Number(getPostsDto.page) * Number(take) || 0;
     const subject = getPostsDto.subject;
     const label = getPostsDto.label;
-    const user = getPostsDto.user;
+    const username = getPostsDto.user;
 
     const query = this.postRepository.createQueryBuilder('post');
 
-    if (user) {
+    if (username) {
+      const u = await this.usersService.findOneByUsername(username);
       query.innerJoinAndSelect('post.user', 'user', 'user.id = :id', {
-        id: user,
+        id: u.id,
       });
     } else {
       query.leftJoinAndSelect('post.user', 'user');
@@ -69,8 +70,8 @@ export class PostService {
       },
     };
 
-    if(user) {
-      result.user = await this.usersService.findOne(user);
+    if(username) {
+      result.user = await this.usersService.findOneByUsername(username);
     }
     if(subject) {
       result.subject = await this.subjectService.findOne(subject);
