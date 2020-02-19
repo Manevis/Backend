@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Patch,
   Post,
   Req,
@@ -15,6 +14,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
+import { ResendActivationEmailDto } from './dto/resend-activation-email.dto';
 
 @Controller('users')
 export class UsersController {
@@ -37,6 +37,13 @@ export class UsersController {
   @Post('register/email-validation')
   validateEmail(@Body() emailValidationDto: EmailValidationDto) {
     return this.usersService.validateEmail(emailValidationDto);
+  }
+
+  @Post('register/resend-activation-email')
+  resendValidationEmail(
+    @Body() resendActivationEmailDto: ResendActivationEmailDto,
+  ) {
+    return this.usersService.resendActivationEmail(resendActivationEmailDto);
   }
 
   @Post('register')

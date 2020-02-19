@@ -17,6 +17,7 @@ import Cryption from '../Providers/Cryption/Cryption.provider';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { AuthService } from '../auth/auth.service';
 import { hash } from 'bcrypt';
+import { ResendActivationEmailDto } from './dto/resend-activation-email.dto';
 
 @Injectable()
 export class UsersService {
@@ -137,11 +138,12 @@ export class UsersService {
           message: `ایمیل ${user.email} با موفقیت تایید گردید.`,
           validationToken: emailValidationDto.emailValidationToken,
         };
-      } else {
-        throw new HttpException(
-          'ایمیل شما پیش از این تایید شده است!',
-          HttpStatus.NOT_ACCEPTABLE,
-        );
+      } else if(user.status === UserStatusEnum.CONFIRMED_EMAIL) {
+        return {
+          ok: true,
+          message: 'ایمیل شما قبلا تایید شده است. لطفا ثبت نام خود را تکمیل نمایید!',
+          validationToken: emailValidationDto.emailValidationToken,
+        }
       }
     } else {
       throw new HttpException('امکان نداره!', HttpStatus.FORBIDDEN);
@@ -201,5 +203,26 @@ export class UsersService {
       message: 'بروزرسانی اطلاعات کاربری شما با موفقیت انجام شد.',
       updatedUser: u,
     };
+  }
+
+  async resendActivationEmail(
+    resendActivationEmailDto: ResendActivationEmailDto,
+  ) {
+    const user = await this.userRepository.findOne({
+      email: resendActivationEmailDto.email,
+    });
+
+    if (user && user.status === UserStatusEnum.RECEIVED_ACTIVATION_EMAIL) {
+      this.sendEmail.sendVerificationEmail(
+        user,
+        this.cryption.encrypt(user.uuid),
+      );
+      return {
+        message: `لینک فعال‌سازی به ${user.email} ارسال شد`,
+        userStatus: UserStatusEnum.RECEIVED_ACTIVATION_EMAIL,
+      };
+    } else {
+      throw new HttpException('مجاز نمی‌باشد!', HttpStatus.FORBIDDEN);
+    }
   }
 }
