@@ -11,7 +11,14 @@ export class SubjectService {
   ) {}
 
   async findAll() {
-    return await this.subjectRepository.find();
+    const [subjects, totalCount] = await this.subjectRepository.findAndCount({
+      select: ['id', 'name'],
+    });
+
+    return {
+      subjects,
+      totalCount,
+    };
   }
 
   async findOne(id: number) {

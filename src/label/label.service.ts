@@ -12,7 +12,14 @@ export class LabelService {
   ) {}
 
   async findAll() {
-    return await this.labelRepository.find();
+    const [labels, totalCount] = await this.labelRepository.findAndCount({
+      select: ['id', 'name'],
+    });
+
+    return {
+      labels,
+      totalCount,
+    };
   }
 
   async findOne(id: number) {
