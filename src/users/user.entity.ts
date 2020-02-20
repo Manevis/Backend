@@ -5,12 +5,13 @@ import {
   Generated,
   OneToMany,
   BaseEntity,
-  CreateDateColumn, UpdateDateColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { UserStatusEnum } from './enums/user-status.enum';
 import { Exclude } from 'class-transformer';
 import { Post } from '../post/post.entity';
-import {Photo} from "../photo/photo.entity";
+import { Photo } from '../photo/photo.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -27,13 +28,13 @@ export class User extends BaseEntity {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   phoneNumber: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   username: string;
 
   @Exclude()
@@ -56,19 +57,27 @@ export class User extends BaseEntity {
   })
   status: string;
 
-  @OneToMany(type => Post, post => post.user, {
-    cascade: true,
-  })
+  @OneToMany(
+    type => Post,
+    post => post.user,
+    {
+      cascade: true,
+    },
+  )
   posts: Post[];
 
-  @OneToMany(type => Photo, photo => photo.user, {
-    cascade: true,
-  })
+  @OneToMany(
+    type => Photo,
+    photo => photo.user,
+    {
+      cascade: true,
+    },
+  )
   photos: Photo[];
 
-  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: string;
 
-  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: string;
 }
