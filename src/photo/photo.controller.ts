@@ -18,6 +18,8 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { AuthGuard } from '@nestjs/passport';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Controller('photos')
 export class PhotoController {
@@ -28,7 +30,11 @@ export class PhotoController {
   @UseInterceptors(
     FileInterceptor('photo', {
       storage: diskStorage({
-        destination: 'photos',
+        destination: (req, file, cb) => {
+          const folderName = path.join(__dirname, '../../photos/users/tests');
+          fs.mkdirSync(folderName, { recursive: true });
+          cb(null, folderName);
+        },
         filename: (req, file, cb) => {
           return cb(null, `${uuid()}${extname(file.originalname)}`);
         },
@@ -54,7 +60,7 @@ export class PhotoController {
       if (err) {
         return res.status(HttpStatus.NOT_FOUND).send({
           statusCode: HttpStatus.NOT_FOUND,
-          message: 'تصویر مورد نظر یافت نشد!'
+          message: 'تصویر مورد نظر یافت نشد!',
         });
       }
     });
