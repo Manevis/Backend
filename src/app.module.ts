@@ -24,7 +24,7 @@ env.config();
         },
       },
       defaults: {
-        from: `"Autor.ir" <${process.env.GMAIL_USER}>`,
+        from: `"Manevis.com" <${process.env.GMAIL_USER}>`,
       },
       template: {
         dir: __dirname + '/../src/email-templates',
