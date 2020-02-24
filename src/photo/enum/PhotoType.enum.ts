@@ -1,5 +1,6 @@
 export enum PhotoTypeEnum {
-    POST = 'POST',
-    PROFILE_PICTURE = 'PROFILE_PICTURE',
-    PAGE_COVER = 'PAGE_COVER',
+  POST = 'POST',
+  AVATAR = 'AVATAR',
+  COVER = 'COVER',
+  OTHER = 'OTHER',
 }

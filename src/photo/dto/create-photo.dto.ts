@@ -1,5 +1,4 @@
-import {IsEnum, IsOptional, IsString} from "class-validator";
-import {PhotoTypeEnum} from "../enum/PhotoType.enum";
+import {IsOptional, IsString} from "class-validator";
 
 export class CreatePhotoDto {
     @IsString()
@@ -8,7 +7,4 @@ export class CreatePhotoDto {
     @IsString()
     @IsOptional()
     description: string;
-
-    @IsEnum(PhotoTypeEnum)
-    type: PhotoTypeEnum;
 }

@@ -4,6 +4,7 @@ import { Photo } from './photo.entity';
 import { Repository } from 'typeorm';
 import { CreatePhotoDto } from './dto/create-photo.dto';
 import { UsersService } from '../users/users.service';
+import { PhotoTypeDto } from './dto/photo-type.dto';
 
 @Injectable()
 export class PhotoService {
@@ -25,14 +26,13 @@ export class PhotoService {
     );
   }
 
-  async create(u, createPhotoDto: CreatePhotoDto, p) {
+  async create(u, createPhotoDto: CreatePhotoDto, p, photoTypeDto: PhotoTypeDto) {
     const user = await this.usersService.findOne(u.id);
     const photo = new Photo();
-    photo.description = createPhotoDto.description;
     photo.name = createPhotoDto.name;
-    photo.name = createPhotoDto.name;
-    photo.type = createPhotoDto.type;
     photo.fileName = p.filename;
+    photo.description = createPhotoDto.description;
+    photo.type = photoTypeDto.type;
     photo.user = user;
     return await photo.save();
   }
