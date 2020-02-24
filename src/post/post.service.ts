@@ -7,7 +7,7 @@ import { UsersService } from '../users/users.service';
 import { GetPostsDto } from './dto/get-posts.dto';
 import { SubjectService } from '../subject/subject.service';
 import { PostStatusEnum } from './enums/post-status.enum';
-import {LabelService} from "../label/label.service";
+import { LabelService } from '../label/label.service';
 
 @Injectable()
 export class PostService {
@@ -53,7 +53,7 @@ export class PostService {
     }
     query.take(take);
     query.skip(skip);
-    query.where('post.status = :status', {status: PostStatusEnum.PUBLISHED});
+    query.where('post.status = :status', { status: PostStatusEnum.PUBLISHED });
     query.orderBy('post.id', 'DESC');
     const [posts, totalCount] = await query.getManyAndCount();
 
@@ -70,13 +70,13 @@ export class PostService {
       },
     };
 
-    if(username) {
+    if (username) {
       result.user = await this.usersService.findOneByUsername(username);
     }
-    if(subject) {
+    if (subject) {
       result.subject = await this.subjectService.findOne(subject);
     }
-    if(label) {
+    if (label) {
       result.label = await this.labelService.findOne(label);
     }
 
@@ -85,21 +85,11 @@ export class PostService {
 
   async findOne(id: number) {
     try {
-      const post = await this.postRepository.findOne(id, {
+      return await this.postRepository.findOneOrFail(id, {
         relations: ['user'],
       });
-
-      if (post) {
-        return post;
-      } else {
-        throw new HttpException(
-          'مقاله مورد نظر یافت نشد',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-    } catch (e) {
-      console.log(e);
-      return e;
+    } catch {
+      throw new HttpException('مقاله مورد نظر یافت نشد', HttpStatus.NOT_FOUND);
     }
   }
 
